@@ -1,0 +1,40 @@
+<div class="posts-tab">
+	<ul class="posts-sidebar">
+		<li v-for="post in posts" v-bind:key="post.id"
+			v-bind:class="{ selected: post === selectedPost }"
+			v-on:click="selectedPost = post">{{ post.title }}</li>
+	</ul>
+	<div class="selected-post-container">
+		<el-input v-model="input" placeholder="请输入内容"></el-input>
+		<el-switch
+		  v-model="value"
+		  active-color="#13ce66"
+		  inactive-color="#ff4949">
+		</el-switch>
+		<div v-if="selectedPost" class="selected-post">
+			<h3>{{ selectedPost.title }}</h3>
+			<div v-html="selectedPost.content"></div>
+			<iframe src="http://www.163.com" width="200" height="200"></iframe>
+		</div>
+		  <template v-else>
+		    <el-table
+		      :data="tableData"
+		      style="width: 100%">
+		      <el-table-column
+		        prop="date"
+		        label="日期"
+		        width="180">
+		      </el-table-column>
+		      <el-table-column
+		        prop="name"
+		        label="姓名"
+		        width="180">
+		      </el-table-column>
+		      <el-table-column
+		        prop="address"
+		        label="地址">
+		      </el-table-column>
+		    </el-table>
+		  </template>
+	</div>
+</div>
