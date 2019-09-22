@@ -4,22 +4,23 @@
 }
 </style>
 <div id="table-ui">
-	<template>
-		<section>
+		
 			<!--工具条-->
-			<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
-				<el-form :inline="true" :model="filters">
-					<el-form-item>
-						<el-input v-model="filters.name" placeholder="姓名"></el-input>
-					</el-form-item>
-					<el-form-item>
-						<el-button type="primary" v-on:click="getUsers">查询</el-button>
-					</el-form-item>
-					<el-form-item>
-						<el-button type="primary" @click="handleAdd">新增</el-button>
-					</el-form-item>
-				</el-form>
-			</el-col>
+			<el-row>
+				<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+					<el-form :inline="true" :model="filters">
+						<el-form-item>
+							<el-input v-model="filters.name" placeholder="姓名"></el-input>
+						</el-form-item>
+						<el-form-item>
+							<el-button type="primary" v-on:click="getUsers">查询</el-button>
+						</el-form-item>
+						<el-form-item>
+							<el-button type="primary" @click="handleAdd">新增</el-button>
+						</el-form-item>
+					</el-form>
+				</el-col>
+			</el-row>
 	
 			<!--列表-->
 			<el-table :data="users" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
@@ -46,11 +47,13 @@
 			</el-table>
 	
 			<!--工具条-->
-			<el-col :span="24" class="toolbar">
-				<el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
-				<el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="20" :total="total" style="float:right;">
-				</el-pagination>
-			</el-col>
+			<el-row>
+				<el-col :span="24" class="toolbar">
+					<el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
+					<el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="20" :total="total" style="float:right;">
+					</el-pagination>
+				</el-col>
+			</el-row>
 	
 			<!--编辑界面-->
 			<el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
@@ -107,8 +110,6 @@
 					<el-button type="primary" @click.native="addSubmit" :loading="addLoading">提交</el-button>
 				</div>
 			</el-dialog>			
-		</section>
-	</template>
 </div>
 
 <script>

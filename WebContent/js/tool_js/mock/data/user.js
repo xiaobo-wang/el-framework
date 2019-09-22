@@ -3,7 +3,7 @@ const LoginUsers = [
     id: 1,
     username: 'admin',
     password: '123456',
-    avatar: 'http://localhost:8080/elui/img/user.png',
+    avatar: 'img/user.png',
     name: '张玉'
   }
 ];
