@@ -141,6 +141,6 @@ let appvue = new Vue({
 		        iframe:true
 		      }];//主区域导航
 		//主页面区导航
-		//this.handleLeftMenuSelect('13')
+		this.handleLeftMenuSelect('12')
 	}    
 });
