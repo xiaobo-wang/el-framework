@@ -1,11 +1,3 @@
-Mock.mock('/user/tablist', {
-    'tabInfos|1-10': [{
-        'id|+1': 1,//属性 id 是一个自增数，起始值为 1，每次增 1
-        'title': '@EMAIL',//随机邮箱地址
-        'content':'<button>@county(true)</button>'
-    }]
-});
-
 let appvue = new Vue({
     el: '#app',
     data: function() {		

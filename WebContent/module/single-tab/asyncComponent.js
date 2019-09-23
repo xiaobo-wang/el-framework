@@ -1,12 +1,11 @@
 export default {  
-	props: ['posts'],
+	props: ['para'],
 	data: function () {
 	    return {
-	    	input:'',
-	    	value:false,
-	    	radio:false,
+	    	info: this.para,
 	    	selectedPost: null,
-	          tableData: [{
+	    	posts: [],	    	
+	        tableData: [{
 	              date: '2016-05-02',
 	              name: '王小虎',
 	              address: '上海市普陀区金沙江路 1518 弄'
@@ -27,7 +26,10 @@ export default {
 	  },
 	template: '',
 	mounted() {
-		console.log(this.posts);   		    	
+		console.log(this.info); 
+		axios.get('/user/tablist', { params: {} }).then((res) => {
+			 this.posts = res.data.tabInfos;
+		});
 	},
 	destroyed() {
 		console.log('destroyed compa');

@@ -2,9 +2,181 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<!-- import CSS -->
+<link rel="stylesheet" href="theme/index.css">
+<!-- import Vue JavaScript -->
+<script src="js/sys_js/vue.js"></script>
+
+<script src="js/sys_js/vuex.js"></script>
+
+<!-- import elementui JavaScript -->
+<script src="js/sys_js/elementui.js"></script>
+
+<!-- import axios JavaScript -->
+<script src="js/sys_js/axios.min.js"></script>
+<script src="js/sys_js/vue-axios.js"></script>
+
+<script src="js/sys_js/jquery-2.0.3.min.js"></script>
+
+<!-- import mock JavaScript -->
+<script src="js/sys_js/mock.js"></script>
+<script src="js/sys_js/axios-mock-adapter.js"></script>
+
+<script src="js/sys_js/util.js"></script>
+<link rel="stylesheet" href="theme/asyncComponent.css">
+
+<style lang="scss" scoped>
+	body {
+		margin:0px;
+		padding:0px;
+	}
+		
+	.el-header{
+		background-color: #B3C0D1;
+		color: #333;
+		text-align: center;
+		line-height: 60px;
+		margin:0px;
+		padding:0px;
+	}
+	
+	.el-aside {
+		background-color: #D3DCE6;
+		color: #333;
+		//text-align: center;
+		//width: 230px !important;
+	}
+	.el-menu-vertical-demo:not(.el-menu--collapse) {
+    	width: 250px;
+    	min-height: 400px;
+  	}
+  	
+  	.el-scrollbar__wrap {
+		overflow-x: hidden;
+	}
+
+	.el-main {
+		background-color: #E9EEF3;
+		color: #333;
+		text-align: center;
+		padding:5px;
+	}
+	
+	.header {
+		height: 60px;
+		line-height: 60px;
+		background: #20a0ff;
+		color:#fff;
+	}
+			
+	.userinfo {
+		text-align: right;
+		padding-right: 35px;
+		float: right;
+	}
+	.userinfo .userinfo-inner {
+		cursor: pointer;
+		color:#fff;
+	}
+	.userinfo .userinfo-inner  img {
+		width: 40px;
+		height: 40px;
+		border-radius: 20px;
+		margin: 10px 0px 10px 10px;
+		float: right;
+	}
+
+	.logo .logo-width{
+		width:230px;
+	}
+	.logo .logo-collapse-width{
+		width:60px
+	}
+</style>
+<title>主界面</title>
 </head>
-<body>
-tab-main
+<body style="margin:0px;padding:0px;">
+	<el-container id="app"> 
+		<el-header>
+			<el-row class="header">
+				<el-col :span="5" :class="collapsed?'logo-collapse-width':'logo-width'">
+					{{collapsed?'':sysName}}
+				</el-col>
+				<el-col :span="10">
+					<!-- 顶部导航菜单 -->
+					<el-menu :default-active="activeIndex" style="height:60px;overflow:hidden;" class="el-menu-demo" mode="horizontal" @select="handleTopMenuSelect" background-color="#20a0ff" text-color="#fff" active-text-color="#ffd04b">
+					   <el-menu-item v-for="(item,index) in navData" :key="index" :index=item.id>
+					       <i :class=item.icon></i>
+					       <span slot="title">{{item.name}}</span>
+					   </el-menu-item>
+					 </el-menu>
+				</el-col>
+				<el-col :span="9" class="userinfo">
+					<el-radio-group v-model="isCollapse" >
+					  <el-radio-button :label="false">展开</el-radio-button>
+					  <el-radio-button :label="true">收起</el-radio-button>
+					</el-radio-group>
+					<el-dropdown trigger="hover">
+						<span class="el-dropdown-link userinfo-inner"><img :src="this.sysUserAvatar" /> {{sysUserName}}</span>
+						<el-dropdown-menu slot="dropdown">
+							<el-dropdown-item @click.native="handleLeftMenuSelect('11')">我的消息</el-dropdown-item>
+							<el-dropdown-item @click.native="handleLeftMenuSelect('22')">设置</el-dropdown-item>
+							<el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
+						</el-dropdown-menu>
+					</el-dropdown>
+				</el-col>
+			</el-row>
+		</el-header> 
+		<el-container>
+			<el-scrollbar>
+			<!-- 左侧导航菜单 -->
+			<el-menu class="el-menu-vertical-demo" @select="handleLeftMenuSelect" :collapse="isCollapse">
+				<template v-for="item in listNav">
+	              <!-- 一级菜单 -->
+	              <el-menu-item v-if="item.items.length===0" :index="item.id">
+	                <i :class=item.icon></i>
+	                 <span slot="title">{{ item.text }}</span>	                
+	              </el-menu-item>
+	              <!-- 一级菜单 -->
+	              <el-submenu v-else :index="item.id">
+	              	<template slot="title">
+	                  <i :class=item.icon></i>
+	                  <span slot="title">{{ item.text }}</span>
+	                </template>
+	                <template v-for="c_item in item.items">
+		              <!--二级级菜单-->
+		              <el-menu-item v-if="c_item.items.length===0" :index="c_item.id">
+		                <i :class=c_item.icon></i>
+		                <span slot="title">{{ c_item.text }}</span>	 
+		              </el-menu-item>
+	                </template>
+	              </el-submenu>
+	            </template>
+			</el-menu>
+			</el-scrollbar>
+			<el-main>
+				<el-tabs v-model="activeTab" type="card" closable @tab-remove="removeTab">
+				  <el-tab-pane
+				    v-for="(item, index) in tabsNav"
+				    :key="item.name"
+				    :name="item.id"
+				  >
+				  	<span slot="label"><i :class="item.icon"></i> {{item.text}}</span>		  
+					<keep-alive>
+						<template v-if="item.iframe">
+							<tab-iframe v-bind:link="item.url" v-bind:para="item.para"></tab-iframe>
+						</template>
+						<template v-if="!item.iframe">
+					  		<component v-bind:para="item.para" v-bind:is="item.url.replace(/\//g,'')"></component>
+						</template>
+					</keep-alive>
+				  </el-tab-pane>
+				</el-tabs>
+			</el-main> 
+		</el-container> 
+	</el-container>
 </body>
+<script type="module" src="js/tool_js/mock/mock_data.js"></script>
+<script src="js/tool_js/menu-data.js"></script>
+<script type="module" src="tab-main.js"></script>
 </html>
